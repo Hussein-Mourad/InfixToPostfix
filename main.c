@@ -49,7 +49,7 @@ int isEmpty(Stack *s)
 else it will return 0
 
 */
-int isFull(stack* s){
+int isFull(Stack* s){
 if (s->top==MAX_SIZE)
 return 1;
 else
@@ -71,7 +71,7 @@ Item pop(Stack *s)
 
  s->top--;
 
- return >s->items[s->top];
+ return s->val[s->top];
 
 }
 /*
@@ -79,7 +79,7 @@ Item pop(Stack *s)
 */
 void push(Stack *s, Item val)
 {
-s->items[s->top]=val;
+s->val[s->top]=val;
 s->top++;
 
 }
