@@ -4,6 +4,7 @@
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
+#define MAX_SIZE 256
 /*
 * Item: An item that is being pushed to or popped from the stack
 * It may be float (to be used while evaluating the postfix)
@@ -14,47 +15,73 @@ typedef union
     float fData;
     char  cData;
 } Item;
-/*
+/*array based
 *
 */
 typedef struct
 {
-    /* TODO: ADD YOUR CODE HERE */
+Item val[MAX_SIZE];
+int top ;
+
 } Stack;
-/*
+/* It initializes stack so that there are no elements inserted.
 *
 */
 Stack * initialize()
 {
-    /* TODO: ADD YOUR CODE HERE */
+    Stack *s=malloc(sizeof(Stack));
+s->top=0;
+return s;
 }
-/*
+/*it checks if the top is empty or not so it can pop the elements and if the top equals 0 it will return 1
+else it will return 0
 *
 */
 int isEmpty(Stack *s)
 {
-    /* TODO: ADD YOUR CODE HERE */
+    if(s->top==0)
+ return 1;
+ else
+ return 0;
+}
+
+/*it checks if the top is equals to the MAX_SIZE and if it equals to the MAX_SIZE it will return 1
+else it will return 0
+
+*/
+int isFull(Stack* s){
+if (s->top==MAX_SIZE)
+return 1;
+else
+return 0;
 }
 /*
-*
+*It inserts element at the top of the stack.
 */
 Item top(Stack *s)
+
 {
-    /* TODO: ADD YOUR CODE HERE */
+    return s->val[s->top-1];
 }
 /*
-*
+*It removes the last inserted element in the stack and return it.
 */
 Item pop(Stack *s)
 {
-    /* TODO: ADD YOUR CODE HERE */
+
+ s->top--;
+
+ return s->val[s->top];
+
 }
 /*
-*
+*It inserts element at the top of the stack.
 */
 void push(Stack *s, Item val)
 {
-    /* TODO: ADD YOUR CODE HERE */
+s->val[s->top]=val;
+s->top++;
+
 }
 /*
 * infixToPostfix: converts an expression in infix notation to
