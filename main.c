@@ -64,7 +64,7 @@ void push(Stack *s, Item val)
 * e.g., 22 + 31 --> 22 31 +
 * e.g., ( 2 + 3 ) * 4 --> 2 3 + 4 *
 */
-//Helping func used in infixToPostfic().
+//Helping func used in infixToPostfix().
 void err(char* message)
 {
     printf("\n...%s...\n\n",message);
@@ -78,24 +78,21 @@ int prec(char c)
     case '+' :
     case '-' :
         return 1;
-        break;
     case '*' :
     case '/' :
         return 2;
-        break;
     case '^' :
         return 3;
-        break;
     default :
         return 0;
     }
 }
-//Helping func used in infixToPostfic().
+//Helping func used in infixToPostfix().
 int lessPrec(char ch1,char ch2)
 {
     return prec(ch1) < prec(ch2);
 }
-//Helping func used in infixToPostfic()
+//Helping func used in infixToPostfix()
 int notValidType(ch)
 {
     if( !isdigit(ch) && ch != '.' && ch != '+' && ch != '-' && ch != '*' && ch != '/' && ch != '^' && ch != '(' && ch != ')')
@@ -108,8 +105,8 @@ void infixToPostfix(char* infix, char* postfix)
     Stack *s = initialize();
     int index = 0;
     Item ch;
-    /*To handle the case that the infix starts with a -ve number. If the string infix starts with '-' character,
-      then this '-' character is not an operator.*/
+    /* To handle the case that the infix starts with a -ve number. If the string infix starts with '-' character,
+      then this '-' character is not an operator. */
     if((*infix) == '-')
     {
         postfix[index++] = '-';
@@ -162,9 +159,8 @@ void infixToPostfix(char* infix, char* postfix)
         /*If ch.cData higher precedence than top, then push the operator to the stack.
           If ch.cData less precedence than top, then pop all the operator characters in the stack to the postfix string
           and stop if stack empty or top == '(' and then push the operator to the stack.*/
-        else//operator
+        else //operator
         {
-
             if( lessPrec(ch.cData,top(s).cData) )
             {
                 while(!isEmpty(s) && top(s).cData != '(')
@@ -192,7 +188,9 @@ void infixToPostfix(char* infix, char* postfix)
 */
 float evaluatePostfix(char* postfix)
 {
-    /* TODO: ADD YOUR CODE HERE */
+    Stack *s = initialize();
+    int index = 0;
+    Item item;
 }
 /*
 *

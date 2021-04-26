@@ -13,4 +13,10 @@ stdlib.h
 -
 string.h
 -
+string.h
+-
+math.h
+-
+ctype.h
+-
 
