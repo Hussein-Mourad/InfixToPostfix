@@ -128,6 +128,26 @@ int notValidType(char ch)
         return 0;
 }
 
+//Helping func ised in infixToPostfix()
+int isNegativeNumber(char ch, char oneCharBack, char twoCharBack)
+{
+    if(((ch == '-') && (oneCharBack == ' ') && (twoCharBack == '(')) ||
+       ((ch == '-') && (oneCharBack == '('))  ||
+       ((ch == '-') && (oneCharBack == ' ') && (twoCharBack == '+')) ||
+       ((ch == '-') && (oneCharBack == '+'))  ||
+       ((ch == '-') && (oneCharBack == ' ') && (twoCharBack == '-')) ||
+       ((ch == '-') && (oneCharBack == '-'))  ||
+       ((ch == '-') && (oneCharBack == ' ') && (twoCharBack == '*')) ||
+       ((ch == '-') && (oneCharBack == '*'))  ||
+       ((ch == '-') && (oneCharBack == ' ') && (twoCharBack == '/')) ||
+       ((ch == '-') && (oneCharBack == '/'))  ||
+       ((ch == '-') && (oneCharBack == ' ') && (twoCharBack == '^')) ||
+       ((ch == '-') && (oneCharBack == '^')))
+        return 1;
+    else
+        return 0;
+}
+
 void infixToPostfix(char *infix, char *postfix)
 {
     Stack *s = initialize();
@@ -150,8 +170,7 @@ void infixToPostfix(char *infix, char *postfix)
             err("Syntax Error...Characters are not allowed");
 
         // To handle -ve numbers inside brackets.
-        if (((ch.cData == '-') && (*(infix - 2) == ' ') && (*(infix - 3) == '(')) ||
-            (ch.cData == '-' && *(infix - 2) == '('))
+        if (isNegativeNumber(ch.cData,*(infix-2),*(infix-3)))
             postfix[index++] = '-';
 
         // To handle the digit cases.
