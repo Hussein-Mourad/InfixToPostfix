@@ -238,7 +238,7 @@ float evaluatePostfix(char *postfix)
     // Reads through the postfix character by character
     while (item.cData = *postfix++)
     {
-        // If it is space
+        // If it is a space
         if (item.cData == ' ')
         {
             // Stops the buffer at current index
