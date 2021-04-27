@@ -131,18 +131,18 @@ int notValidType(char ch)
 //Helping func ised in infixToPostfix()
 int isNegativeNumber(char ch, char oneCharBack, char twoCharBack)
 {
-    if(((ch == '-') && (oneCharBack == ' ') && (twoCharBack == '(')) ||
-       ((ch == '-') && (oneCharBack == '('))  ||
-       ((ch == '-') && (oneCharBack == ' ') && (twoCharBack == '+')) ||
-       ((ch == '-') && (oneCharBack == '+'))  ||
-       ((ch == '-') && (oneCharBack == ' ') && (twoCharBack == '-')) ||
-       ((ch == '-') && (oneCharBack == '-'))  ||
-       ((ch == '-') && (oneCharBack == ' ') && (twoCharBack == '*')) ||
-       ((ch == '-') && (oneCharBack == '*'))  ||
-       ((ch == '-') && (oneCharBack == ' ') && (twoCharBack == '/')) ||
-       ((ch == '-') && (oneCharBack == '/'))  ||
-       ((ch == '-') && (oneCharBack == ' ') && (twoCharBack == '^')) ||
-       ((ch == '-') && (oneCharBack == '^')))
+    if (((ch == '-') && (oneCharBack == ' ') && (twoCharBack == '(')) ||
+        ((ch == '-') && (oneCharBack == '(')) ||
+        ((ch == '-') && (oneCharBack == ' ') && (twoCharBack == '+')) ||
+        ((ch == '-') && (oneCharBack == '+')) ||
+        ((ch == '-') && (oneCharBack == ' ') && (twoCharBack == '-')) ||
+        ((ch == '-') && (oneCharBack == '-')) ||
+        ((ch == '-') && (oneCharBack == ' ') && (twoCharBack == '*')) ||
+        ((ch == '-') && (oneCharBack == '*')) ||
+        ((ch == '-') && (oneCharBack == ' ') && (twoCharBack == '/')) ||
+        ((ch == '-') && (oneCharBack == '/')) ||
+        ((ch == '-') && (oneCharBack == ' ') && (twoCharBack == '^')) ||
+        ((ch == '-') && (oneCharBack == '^')))
         return 1;
     else
         return 0;
@@ -170,7 +170,7 @@ void infixToPostfix(char *infix, char *postfix)
             err("Syntax Error...Characters are not allowed");
 
         // To handle -ve numbers inside brackets.
-        if (isNegativeNumber(ch.cData,*(infix-2),*(infix-3)))
+        if (isNegativeNumber(ch.cData, *(infix - 2), *(infix - 3)))
             postfix[index++] = '-';
 
         // To handle the digit cases.
@@ -244,15 +244,42 @@ int isOperand(char c)
 }
 
 /*
+* Takes two Items and operand and perform the appropriate operation between  number
+ */
+Item performOperation(Item num1, Item num2, char operand)
+{
+    Item result;
+    switch (operand)
+    {
+    case '+':
+        result.fData = num2.fData + num1.fData;
+        break;
+    case '-':
+        result.fData = num2.fData - num1.fData;
+        break;
+    case '*':
+        result.fData = num2.fData * num1.fData;
+        break;
+    case '/':
+        result.fData = num2.fData / num1.fData;
+        break;
+    case '^':
+        result.fData = pow(num2.fData, num1.fData);
+        break;
+    }
+    return result;
+}
+
+/*
 * evaluatePostfix: Evaluates an expression in postfix notation
 * (Reverse-Polish Notation)
 */
 float evaluatePostfix(char *postfix)
 {
     Stack *stack = initialize(); // initializes a new stack
-    Item item; // holds the value of each character read from the postfix
-    int index = 0; // index of the buffer
-    char buffer[256]; // temporarily holds numbers and operands
+    Item item;                   // holds the value of each character read from the postfix
+    int index = 0;               // index of the buffer
+    char buffer[256];            // temporarily holds numbers and operands
 
     // Reads through the postfix character by character
     while (item.cData = *postfix++)
@@ -276,33 +303,8 @@ float evaluatePostfix(char *postfix)
                 // pops two numbers from the stack
                 Item num1 = pop(stack);
                 Item num2 = pop(stack);
-                Item result; // holds the result
-
-                // Does the appropriate operation between two popped number
-                // Then it pushes the result to the stack
-                switch (buffer[index - 1])
-                {
-                case '+':
-                    result.fData = num2.fData + num1.fData;
-                    push(stack, result);
-                    break;
-                case '-':
-                    result.fData = num2.fData - num1.fData;
-                    push(stack, result);
-                    break;
-                case '*':
-                    result.fData = num2.fData * num1.fData;
-                    push(stack, result);
-                    break;
-                case '/':
-                    result.fData = num2.fData / num1.fData;
-                    push(stack, result);
-                    break;
-                case '^':
-                    result.fData = pow(num2.fData, num1.fData);
-                    push(stack, result);
-                    break;
-                }
+                Item result = performOperation(num1, num2, buffer[index - 1]); // performs operation on two numbers
+                push(stack, result); // pushes the result to the stack
             }
             index = 0; // Sets the index back to 0 inorder to reset the buffer
             continue;
