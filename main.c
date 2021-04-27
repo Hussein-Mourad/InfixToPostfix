@@ -145,29 +145,29 @@ void infixToPostfix(char *infix, char *postfix)
         if (ch.cData == ' ')
             continue;
 
-        //Check that the ch.cData isn't a character, like a b c.....
+        // Check that the ch.cData isn't a character, like a b c.....
         if (notValidType(ch.cData))
             err("Syntax Error...Characters are not allowed");
 
-        //To handle -ve numbers inside brackets.
+        // To handle -ve numbers inside brackets.
         if (((ch.cData == '-') && (*(infix - 2) == ' ') && (*(infix - 3) == '(')) ||
             (ch.cData == '-' && *(infix - 2) == '('))
             postfix[index++] = '-';
 
-        //To handle the digit cases.
+        // To handle the digit cases.
         else if (isdigit(ch.cData))
-        { //if the character after the scanned digit is '.' character, this means that we are scanning a float so we must keep scanning.
+        { // if the character after the scanned digit is '.' character, this means that we are scanning a float so we must keep scanning.
             if (*infix == '.')
             {
                 postfix[index++] = ch.cData;
                 postfix[index++] = '.';
                 infix++;
             }
-            /*If the character after the scanned character is digit, this means that we are either scanning a multi digit number
+            /* If the character after the scanned character is digit, this means that we are either scanning a multi digit number
                   or the decimal part of a float number so we must keep scanning.*/
             else if (isdigit(*infix))
                 postfix[index++] = ch.cData;
-            //Else...we have completed the scanning of a number so we must add space after it to separate it from the next number or operator to be scanned.
+            // Else...we have completed the scanning of a number so we must add space after it to separate it from the next number or operator to be scanned.
             else
             {
                 postfix[index++] = ch.cData;
@@ -230,29 +230,37 @@ int isOperand(char c)
 */
 float evaluatePostfix(char *postfix)
 {
-    Stack *stack = initialize();
-    int index = 0;
-    Item item;
-    char buffer[256];
+    Stack *stack = initialize(); // initializes a new stack
+    Item item; // holds the value of each character read from the postfix
+    int index = 0; // index of the buffer
+    char buffer[256]; // temporarily holds numbers and operands
 
+    // Reads through the postfix character by character
     while (item.cData = *postfix++)
     {
-        // printf("postfix: %c\t", postfix[index]);
+        // If it is space
         if (item.cData == ' ')
         {
+            // Stops the buffer at current index
             buffer[index] = '\0';
-            printf("tmp: %s\n", buffer);
 
+            // If it is a number
             if (!isOperand(buffer[index - 1]))
             {
+                // converts string to float and push it to the stack
                 item.fData = atof(buffer);
                 push(stack, item);
             }
+            // If it is an operand
             else if (isOperand(buffer[index - 1]))
             {
+                // pops two numbers from the stack
                 Item num1 = pop(stack);
                 Item num2 = pop(stack);
-                Item result;
+                Item result; // holds the result
+
+                // Does the appropriate operation between two popped number
+                // Then it pushes the result to the stack
                 switch (buffer[index - 1])
                 {
                 case '+':
@@ -271,19 +279,20 @@ float evaluatePostfix(char *postfix)
                     result.fData = num2.fData / num1.fData;
                     push(stack, result);
                     break;
+                case '^':
+                    result.fData = pow(num2.fData, num1.fData);
+                    push(stack, result);
+                    break;
                 }
             }
-            index = 0;
+            index = 0; // Sets the index back to 0 inorder to reset the buffer
             continue;
         }
-
-
-        // if (isdigit(item.cData) && *(postfix + 1) == '-' && isOperand(*(postfix + 2)))
-        //     printf("Negative Number\n");
-
-            buffer[index++] = item.cData;
+        // Splits the postfix by space and reads it into a buffer
+        buffer[index++] = item.cData;
     }
 
+    // Returns the result from the stack
     return pop(stack).fData;
 }
 
